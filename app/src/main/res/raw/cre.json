@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "reactjs-notify",
+  "private_key_id": "11a785fe32e0143733d10c447055cea82f65f23f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQD+ihyC+7chYOaM\ndpbxYqy2H1EASVpydptwHiCgiAahCJFwqPd/+atgf3cEaivg28h914qF2jxjvZ5Z\nMBETMo5CPqFwN/DaLyRwNTyOpQ7BLZ+R/6vuhV0qZOc0baTTAR/hb14lTCWpmAEj\n9+usgmBI+KRE17aHNoTc9tU6AszPqdOyTRW+JpWSLM46seJFjOZjBBOfxiJsGkqz\ny/+fFKqlG3MVF7xVdc+z7+zA0LtpdglKhGO8RNlG1RTdj/MYYv3eVKAoFiIkR0JJ\ny0N5GvvpN1d0wxgi22UBCKmq/yjMkpiuvoW8Unw8+V98o8i3/xxTrc7BqXBvuCPF\ntyCS83trAgMBAAECggEATWz3dURaFTYjivB7w5svTArEmeC2OYEokPcpF4uo8Izp\nqKpM9smcPrMnIdml1TUljFnnEgYrPm+sXhbH6t4C9dWVR8xMYCHc5KDc9crxbQOS\nuVdbFifNChs9VO5RJ7n815cHvTKndin9ltJQBt51qVywoxw2snR7/7a5b3bwk+3K\nYg9wFuV3R+v1lKBQP6Jkc+uqWHbXIDPvmXIll98W7h9hIqgKojOagXvwoBKb68yR\nenN+3lCW43fIZ96wGXZuWjFpO2O23RIqsV4JgGFHoIGLDdoBNCM78UlfhNSIgav5\nQbKHwA4c5iShcDXN+EsYpMYt0w7song9h63KExjIyQKBgQD/x+Yok2FSfU1ax/oU\nBkBf0F6HI8NYKXkmVHcEknZaNL4544qSFyMxGNQFXGs8RdHpUXZ0+dqVI+pq5ynT\ntfc6j4J5PALird8z+cc1bnwbi4UEoyi5fnJ/FYK1WNYIYP4tBArdxNx23x7MgUht\n7lD/a5INMcsxTBBTGceaJykAbwKBgQD+wfCm8bUktLKw6fsFWhDSxYy/ei9bLb99\nWQ48K2QrXLMRLaHmk8TCuoOgCxePatRURuoJMK5jkn1odhVFe+RjQayLxVhfKJ+p\n5WuJBXyaDCLzgJi5qaF3BmJVepk+Vr6K2cuPyn2zbty/8VzksacDIo2uJ7L/5smM\n5NvkqwM6xQKBgQCtgkP+GGP3mipkP63D8a2vkWDeWYNFBfU57ChEgLoqXQcBq/ov\nOeTUhFwnOtc/rrlDhdBOb8M4UoHNfPxhslmAbyN57Byk+n+j+XeKJmWoJc/ZInkY\nw88VqFjffeDLFEi37rsUT1uig56X6cdhUz281pLfwnxs94VHagB98LyenwKBgQDf\nKIPluVU0EhV1Y4C/72VNPD9Oe3mAJVLYOmp9yoS0dz9kjNSFZmu1KCykxRKeTrYw\nHO5lnn8kOe4g009OzngBekXrKbN/p9Y0vQK1xFihmIAFTWB7QlxuJul8dyhFsza1\n6pKmInp582LrwEHfEr95v4rcQ2pJP6DOCquUYzkxAQKBgQCFSvpCR+g6r+OfYlNV\nvmODepm4QxKHTc4iSgstOQA40TEtPOlRCNxe8h26jOjHEA2n84c1oXqIls0aWmvN\n33kTO371+3fFiydh7nQBt7B7dlvmC7PvTFUaELiWdqOMiHvz45t7oTPwvq7Cw6FK\n20SpteqRv7N7iWsaF1Yyg5VAJg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "android@reactjs-notify.iam.gserviceaccount.com",
+  "client_id": "113700132269218637033",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/android%40reactjs-notify.iam.gserviceaccount.com"
+}

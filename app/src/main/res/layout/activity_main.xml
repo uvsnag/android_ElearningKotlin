@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtField" />
+
+    <EditText
+        android:id="@+id/txtField"
+        android:layout_width="347dp"
+        android:layout_height="228dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="50dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="22dp"
+        android:text="Stop"
+        app:layout_constraintStart_toEndOf="@+id/btnStart"
+        app:layout_constraintTop_toBottomOf="@+id/txtField" />
+
+    <TextView
+        android:id="@+id/txtStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="36dp"
+        android:text="OFF"
+        app:layout_constraintStart_toEndOf="@+id/btnStop"
+        app:layout_constraintTop_toBottomOf="@+id/txtField" />
+
+    <Spinner
+        android:id="@+id/spnSheet"
+        android:layout_width="206dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnStop" />
+
+    <Spinner
+        android:id="@+id/spnOder"
+        android:layout_width="206dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spnSheet" />
+
+    <Spinner
+        android:id="@+id/spnTypeNotify"
+        android:layout_width="208dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spnOder" />
+
+    <EditText
+        android:id="@+id/txtTime"
+        android:layout_width="82dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="38dp"
+        android:ems="10"
+        android:inputType="number"
+        android:text="40"
+        app:layout_constraintStart_toEndOf="@+id/spnSheet"
+        app:layout_constraintTop_toBottomOf="@+id/txtStatus" />
+
+    <SeekBar
+        android:id="@+id/sbSpeed"
+        android:layout_width="208dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spnTypeNotify" />
+
+    <Spinner
+        android:id="@+id/spnVoice"
+        android:layout_width="125dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toEndOf="@+id/spnOder"
+        app:layout_constraintTop_toBottomOf="@+id/txtTime" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
