@@ -1,4 +1,4 @@
-package com.snag.elearningkotlin.reciver
+package com.snag.elearningkotlin.receiver
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver

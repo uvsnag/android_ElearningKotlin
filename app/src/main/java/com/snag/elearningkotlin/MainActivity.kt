@@ -5,10 +5,8 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.PowerManager
+import android.os.SystemClock
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.*
@@ -16,15 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.snag.elearningkotlin.common.Constants
-import com.snag.elearningkotlin.common.isStop
+import com.snag.elearningkotlin.common.*
 import com.snag.elearningkotlin.model.SheetInfo
-import com.snag.elearningkotlin.reciver.NotificationReceiverActivity
+import com.snag.elearningkotlin.receiver.NotificationPublisher
+import com.snag.elearningkotlin.receiver.NotificationReceiverActivity
 import com.snag.elearningkotlin.service.GoogleService
 import java.lang.String
 import java.util.*
 import kotlin.String as String1
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,15 +31,9 @@ class MainActivity : AppCompatActivity() {
     private var txtField: EditText? = null
 
     private var txtTime: EditText? = null
-    private var sbSpeed: SeekBar? = null
 
     private var spnSheet: Spinner? = null
-    private var spnOder: Spinner? = null
-    private var spnTypeNotify: Spinner? = null
     private var spnVoice: Spinner? = null
-
-    private var textToSpeechEng: TextToSpeech? = null
-    private var textToSpeechVie: TextToSpeech? = null
 
     private var textToSpeech: TextToSpeech? = null
 
@@ -52,7 +43,12 @@ class MainActivity : AppCompatActivity() {
     private var resultIntent: Intent? = null
 
     private var notificationManager: NotificationManager? = null
-    private var wakeLock: PowerManager.WakeLock? = null
+//    private var wakeLock: PowerManager.WakeLock? = null
+
+    private var prevId =-1
+    private var prevId2 =-1
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +67,10 @@ class MainActivity : AppCompatActivity() {
         resultIntent = Intent(this@MainActivity, NotificationReceiverActivity::class.java)
         notificationManager =
             this@MainActivity.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+        alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+
+        strBtnStop = getString(R.string.btn_stop)
 
         spnSheet = findViewById(R.id.spnSheet)
         ArrayAdapter.createFromResource(
@@ -103,8 +103,6 @@ class MainActivity : AppCompatActivity() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spnVoice!!.adapter = adapter
         }
-
-        var sheetAPIList: MutableList<SheetInfo> = mutableListOf()
 
         checkPermission(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -190,6 +188,7 @@ class MainActivity : AppCompatActivity() {
                 id: Long
             ) {
                 setDataTextBox(sheetAPIList)
+                listLineTemp = sheetAPIList.toMutableList()
             }
         }
 
@@ -204,7 +203,7 @@ class MainActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                showNotifyForStop()
+                showNotifyForStop(this@MainActivity)
             }
         }
 
@@ -247,133 +246,52 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        if (wakeLock != null && wakeLock!!.isHeld) {
-            wakeLock!!.release()
-            Toast.makeText(this@MainActivity, "wakeLock is off ", Toast.LENGTH_SHORT)
-                .show()
-        }
         super.onDestroy()
     }
 
-    private fun showNotifyForStop() {
+    private fun showNotifyForStop(context: Context) {
         val typeNotify = spnTypeNotify!!.selectedItem.toString()
         if (!isStop && (typeNotify == "-vie" || typeNotify == "-voice" || typeNotify == "-eng")) {
-            showNotification(
-                this@MainActivity,
-                "ELearningKotlin",
-                Constants.EMPTY_VALUE,
-                resultIntent
-            )
+            showNotification( context, "ELearningKotlin", Constants.EMPTY_VALUE,  resultIntent , notificationManager!!)
         }
     }
-
     private fun onStopNotify() {
         txtStatus!!.text = Constants.STT_OFF
         isStop = true
         notificationManager!!.cancelAll()
-
+        if(alarmManager!= null){
+            val pendingIntent = PendingIntent.getBroadcast(
+                this@MainActivity, 1, intent, 0
+            )
+            alarmManager!!.cancel(pendingIntent)
+        }
+//        if (wakeLock != null && wakeLock!!.isHeld) {
+//            wakeLock!!.release()
+//            Toast.makeText(this@MainActivity, "wakeLock is off ", Toast.LENGTH_SHORT)
+//                .show()
+//        }
     }
 
     private fun onNotify(sheetAPIList: MutableList<SheetInfo>) {
-        if (!isStop) {
-            return
-        }
-        wakeLock =
-            (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
-                newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakelockTag").apply {
-                    acquire()
-                }
-            }
-        Toast.makeText(this@MainActivity, "wakeLock is on ", Toast.LENGTH_SHORT).show()
-        var listLineTemp = sheetAPIList.toMutableList()
 
         if (sheetAPIList.isNotEmpty()) {
-
             isStop = false
+            showNotifyForStop(this@MainActivity)
             txtStatus!!.text = Constants.STT_ON
-            val time: Long = txtTime!!.text.toString().toLong()
+           val time: Long = txtTime!!.text.toString().toLong()
 
-            val order = spnOder!!.selectedItem.toString()
-
-            showNotifyForStop()
-
-            val timer = object : CountDownTimer(9000000, time * 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-
-                    if (isStop) {
-                        this.onFinish()
-
-                        return
-                    }
-                    if (listLineTemp.isEmpty()) {
-                        listLineTemp = sheetAPIList.toMutableList()
-                    }
-                    var i = 0
-                    if (order == "Sequence") {
-
-                    }
-                    if (order == "Random") {
-                        i = (0 until listLineTemp.size).random()
-                    }
-                    val line = listLineTemp.get(i)
-
-                    onProcessNotifyVoice(line)
-                    listLineTemp.removeAt(i)
-                }
-
-                override fun onFinish() {
-                    if (wakeLock == null) {
-                        wakeLock!!.release()
-                        Toast.makeText(this@MainActivity, "wakeLock is off ", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                    this.cancel()
-                }
-            }
-            timer.start()
+            val notificationIntent = Intent(this, NotificationPublisher::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(
+                this,
+                0,
+                notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
+            val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+            alarmManager.setRepeating (AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), time*1000, pendingIntent)
         }
     }
 
-    private fun onProcessNotifyVoice(line: SheetInfo) {
-
-
-        val strEng: String1 = line.eng.toString()
-        val strVie: String1 = line.vie
-
-        when (spnTypeNotify!!.selectedItem.toString()) {
-            "-eng" -> {
-                onSpeak(strEng, strVie, Constants.LANG_ENG)
-            }
-            "-voice" -> {
-                onSpeak(strEng, strVie, Constants.LANG_ENG_VIE)
-            }
-            "eng-" -> {
-                showNotification(this@MainActivity, strEng, Constants.EMPTY_VALUE, resultIntent)
-            }
-            "noti-" -> {
-                showNotification(this@MainActivity, strEng, strVie, resultIntent)
-            }
-            "eng-eng" -> {
-                showNotification(this@MainActivity, strEng, Constants.EMPTY_VALUE, resultIntent)
-                onSpeak(strEng, strVie, Constants.LANG_ENG)
-            }
-            "noti-voice" -> {
-                showNotification(this@MainActivity, strEng, strVie, resultIntent)
-                onSpeak(strEng, strVie, Constants.LANG_ENG_VIE)
-            }
-            "noti-eng" -> {
-                showNotification(this@MainActivity, strEng, strVie, resultIntent)
-                onSpeak(strEng, strVie, Constants.LANG_ENG)
-            }
-            "-vie" -> {
-                onSpeak(strEng, strVie, Constants.LANG_VIE)
-            }
-            else -> {
-                //
-            }
-        }
-
-    }
 
     private fun setDataTextBox(intList: MutableList<SheetInfo>) {
         intList.clear()
@@ -381,7 +299,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 val sheetItems = googleService.getData(
                     this@MainActivity,
-                    spnSheet!!.getSelectedItem().toString()
+                    spnSheet!!.selectedItem.toString()
                 )
                 if (sheetItems != null) {
                     for (item in sheetItems) {
@@ -431,93 +349,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onSpeak(speakEng: kotlin.String, strVie: kotlin.String, strLang: kotlin.String) {
 
-        val speedVoid: Float = (sbSpeed!!.progress.toFloat() / 100)
-        textToSpeechEng!!.setSpeechRate(speedVoid)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            when (strLang) {
-                Constants.LANG_ENG -> {
-                    textToSpeechEng!!.speak(speakEng, TextToSpeech.QUEUE_FLUSH, null, null)
-                }
-                Constants.LANG_VIE -> {
-                    textToSpeechVie!!.speak(strVie, TextToSpeech.QUEUE_FLUSH, null, null)
-                }
-                Constants.LANG_ENG_VIE -> {
-                    textToSpeechEng!!.speak(speakEng, TextToSpeech.QUEUE_FLUSH, null, null)
-//                    TimeUnit.SECONDS.sleep(2L)
-
-                    textToSpeechVie!!.speak(strVie, TextToSpeech.QUEUE_FLUSH, null, null)
-                }
-                else -> {
-                    //mo
-                }
-            }
-        } else {
-            when (strLang) {
-                Constants.LANG_ENG -> {
-                    textToSpeechEng!!.speak(speakEng, TextToSpeech.QUEUE_FLUSH, null)
-                }
-                Constants.LANG_VIE -> {
-                    textToSpeechVie!!.speak(strVie, TextToSpeech.QUEUE_FLUSH, null)
-                }
-                Constants.LANG_ENG_VIE -> {
-                    textToSpeechEng!!.speak(speakEng, TextToSpeech.QUEUE_FLUSH, null)
-                    textToSpeechVie!!.speak(strVie, TextToSpeech.QUEUE_FLUSH, null)
-                }
-                else -> {
-                    //mo
-                }
-            }
-        }
-    }
-
-    private fun showNotification(
-        context: Context,
-        title: String1?,
-        body: kotlin.String,
-        intent: Intent?
-    ) {
-        val notificationId = 1
-        val channelId = "channel-01"
-        val channelName = "Channel Name"
-        val importance = NotificationManager.IMPORTANCE_HIGH
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val mChannel = NotificationChannel(
-                channelId, channelName, importance
-            )
-            mChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            notificationManager!!.createNotificationChannel(mChannel)
-        }
-
-        val stopIntent = Intent()
-        stopIntent.action = Constants.ACTION_STOP
-
-        val stopPendingIntent: PendingIntent =
-            PendingIntent.getBroadcast(this, 0, stopIntent, 0)
-
-        val mBuilder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(title)
-            .setContentText(body)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setCategory(NotificationCompat.CATEGORY_REMINDER)
-            .addAction(
-                R.drawable.ic_stop, getString(R.string.btn_stop),
-                stopPendingIntent
-            )
-        val stackBuilder = TaskStackBuilder.create(context)
-        stackBuilder.addNextIntent(intent)
-        val resultPendingIntent = stackBuilder.getPendingIntent(
-            0,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        mBuilder.setContentIntent(resultPendingIntent)
-        notificationManager!!.notify(notificationId, mBuilder.build())
-
-        //
-    }
 
     ///
     private fun checkPermission(permission: String1, requestCode: Int) {

@@ -1,4 +1,4 @@
-package com.snag.elearningkotlin.reciver
+package com.snag.elearningkotlin.receiver
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
