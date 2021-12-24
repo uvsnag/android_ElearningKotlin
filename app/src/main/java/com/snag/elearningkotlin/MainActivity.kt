@@ -288,7 +288,7 @@ class MainActivity : AppCompatActivity() {
                 PendingIntent.FLAG_CANCEL_CURRENT
             )
             val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-            alarmManager.setRepeating (AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), time*1000, pendingIntent)
+            alarmManager.setRepeating (AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 100, time, pendingIntent)
         }
     }
 
