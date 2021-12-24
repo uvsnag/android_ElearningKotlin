@@ -1,14 +1,13 @@
 package com.snag.elearningkotlin.common
 
-import android.app.AlarmManager
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.TaskStackBuilder
+import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.speech.tts.TextToSpeech
 import android.widget.SeekBar
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.core.app.NotificationCompat
 import com.snag.elearningkotlin.R
 import com.snag.elearningkotlin.model.SheetInfo
@@ -19,7 +18,7 @@ var listLineTemp: MutableList<SheetInfo> = mutableListOf()
 var spnOder: Spinner? = null
 var sbSpeed: SeekBar? = null
 var spnTypeNotify: Spinner? = null
-
+var txtStatus: TextView? = null
 
 var textToSpeechEng: TextToSpeech? = null
 var textToSpeechVie: TextToSpeech? = null
@@ -38,14 +37,23 @@ fun showNotification(
     intent: Intent?,
     notificationManager: NotificationManager
 ) {
-
+    val channelId = "channel-01"
+    //    val channelName = "Channel Name"
+//    val importance = NotificationManager.IMPORTANCE_HIGH
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//        val mChannel = NotificationChannel(
+//            channelId, channelName, importance
+//        )
+//        mChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+//        notificationManager!!.createNotificationChannel(mChannel)
+//    }
     val stopIntent = Intent()
     stopIntent.action = Constants.ACTION_STOP
 
     val stopPendingIntent: PendingIntent =
         PendingIntent.getBroadcast(context, 0, stopIntent, 0)
 
-    val mBuilder = NotificationCompat.Builder(context, "eLearning-01")
+    val mBuilder = NotificationCompat.Builder(context, channelId)
         .setSmallIcon(R.mipmap.ic_launcher)
         .setContentTitle(title)
         .setContentText(body)

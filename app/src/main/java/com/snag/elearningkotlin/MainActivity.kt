@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
 
     private var btnStart: Button? = null
     private var btnStop: Button? = null
-    private var txtStatus: TextView? = null
     private var txtField: EditText? = null
 
     private var txtTime: EditText? = null
@@ -288,7 +287,7 @@ class MainActivity : AppCompatActivity() {
                 PendingIntent.FLAG_CANCEL_CURRENT
             )
             val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-            alarmManager.setRepeating (AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 100, time, pendingIntent)
+            alarmManager.setRepeating (AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 100, time*1000, pendingIntent)
         }
     }
 

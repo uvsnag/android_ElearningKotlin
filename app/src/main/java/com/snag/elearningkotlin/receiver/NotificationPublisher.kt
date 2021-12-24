@@ -26,6 +26,7 @@ class NotificationPublisher : BroadcastReceiver() {
             context.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
 
         if (isStop) {
+            txtStatus!!.text=Constants.STT_OFF
             if(alarmManager!= null){
                 val pendingIntent = PendingIntent.getBroadcast(
                     context, 1, intent, 0
